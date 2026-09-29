@@ -207,17 +207,8 @@ JaCoCo : lignes 87.0 %, instructions 87.4 %, branches 68.8 % (gate lignes ≥ 85
 
 Scénario manuel à rejouer dans le navigateur : filtrer `/creneaux?categorie=COIFFURE` → Réserver 1 place → vérifier le code sur `/reservations?email=…` → Annuler → vérifier que la place est de nouveau disponible.
 
-## 9. Captures d'écran (à quoi ressemble l'app)
 
-> Identité **guichet** : papier `#F6F1E7` + encre + rouge tampon, Bricolage Grotesque (titres) + Archivo (courant). Un seul geste mémorable — le **billet à souche perforée** — tout le reste discipliné : filets, pastilles univers, pas de dégradés, pas de cartes SaaS identiques. Vocabulaire constant (« Réserver » → « Réservé », « Rendre » → rendu).
-
-1. **Accueil (`/`)** : grand titre « Votre place vous attend. » + **tableau des départs** (« Au guichet », 6 créneaux panachés : heure, pastille univers, titre, salle et jour, places dont « dernière » en rouge, lien Réserver), puis trois lignes franches Cinéma / Hôtel / Coiffure.
-2. **Billets (`/creneaux`)** : filtres textuels + date, billets à souche détachable (lieu, séance FR, durée, reste, jauge ; souche noire avec prix et bouton Réserver, bouton Retirer admin).
-3. **Billet (`/reserver/{id}`)** : récap + formulaire (nom, email, tél, places plafonnées) → bandeau « Réservé. Votre code : XXXXXXXX ».
-4. **Mes places (`/reservations`)** : registre (code en chasse large, **tampon** « Réservée » plein / « Annulée » contourné en rouge) + action « Rendre » avec confirmation.
-5. **Admin (`/admin/creneaux/nouveau`)** : formulaire sobre ; en cas de conflit, l'erreur métier (« ressource déjà occupée »).
-
-## 10. Choix techniques
+## 9. Choix techniques
 
 | Choix | Pourquoi |
 |---|---|
@@ -241,7 +232,7 @@ Scénario manuel à rejouer dans le navigateur : filtrer `/creneaux?categorie=CO
 
 Écarté en connaissance de cause : **Spring Security / OAuth2-JWT** (pas d'utilisateurs, casserait les formulaires et la console H2 pour zéro gain démo), **WebFlux/R2DBC** (charge classique, JPA bloquant assumé et isolé dans les services), **microservices** (un seul bounded context), **Testcontainers** (H2 suffit, Flyway valide le SQL réel au boot).
 
-## 11. Améliorations possibles
+## 10. Améliorations possibles
 
 - Spring Security (rôles admin/client), protection CSRF activée sur les POST admin.
 - PostgreSQL (les migrations Flyway suivront sans changement), pagination/recherche plein-texte des créneaux.
