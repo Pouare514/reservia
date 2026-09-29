@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Ouvrir un créneau — Réservia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg nav-guichet sticky-top">
+    <div class="container">
+        <a class="marque" th:href="@{/}">Réservia<span class="point">.</span><small>la billetterie</small></a>
+        <ul class="navbar-nav ms-auto"><li class="nav-item"><a class="lien" th:href="@{/creneaux}">Retour aux billets</a></li></ul>
+    </div>
+</nav>
+
+<main class="container section" style="max-width: 680px">
+    <div th:if="${erreur}" class="alert alert-danger"><span th:text="${erreur}"></span></div>
+    <h1 class="section-titre">Ouvrir un créneau</h1>
+    <p class="section-chapeau">Le guichet refuse tout chevauchement sur la même salle, chambre ou fauteuil.</p>
+    <div class="formulaire">
+        <form th:action="@{/admin/creneaux}" method="post">
+            <div class="mb-3"><label for="svc">Service</label>
+                <select id="svc" name="serviceId" class="champ" required>
+                    <option th:each="s : ${services}" th:value="${s.id}" th:text="${s.nom + ' (' + s.categorie.label + ')'}"></option>
+                </select>
+            </div>
+            <div class="mb-3"><label for="res">Salle, chambre ou fauteuil</label>
+                <select id="res" name="resourceId" class="champ" required>
+                    <option th:each="r : ${resources}" th:value="${r.id}" th:text="${r.nom + ' — ' + r.type}"></option>
+                </select>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3"><label for="deb">Début</label><input id="deb" type="datetime-local" name="debut" class="champ" required th:value="${#temporals.format(suggestionDebut, 'yyyy-MM-dd''T''HH:mm')}"/></div>
+                <div class="col-md-6 mb-3"><label for="fin">Fin</label><input id="fin" type="datetime-local" name="fin" class="champ" required/></div>
+            </div>
+            <div class="mb-3"><label for="pl">Places <span style="font-weight:400">(0 reprend la capacité du service)</span></label><input id="pl" type="number" name="places" class="champ" value="0" min="0"/></div>
+            <button class="btn-encre w-100" style="padding:.8rem">Mettre au guichet</button>
+        </form>
+    </div>
+</main>
+<footer class="container pied"><b>Réservia</b>, la billetterie</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

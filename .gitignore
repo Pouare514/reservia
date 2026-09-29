@@ -1,0 +1,49 @@
+# ===== Build (Maven) =====
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# ===== Spring Boot / runtime =====
+boot.log
+*.log
+*.orig
+*.rej
+.h2.db
+*.mv.db
+*.trace.db
+
+# ===== Maven portable local (retéléchargeable, voir README) =====
+.tools/
+
+# ===== Java =====
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+
+# ===== IDE =====
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.code-workspace
+.settings/
+.classpath
+.project
+.factorypath
+*.launch
+nbproject/
+nb-configuration.xml
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== Secrets / local =====
+.env
+.env.local
+application-local.properties

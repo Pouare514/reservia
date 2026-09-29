@@ -1,0 +1,418 @@
+/* ============ Réservia — identité « guichet » ============
+   Papier + encre + rouge tampon. Bricolage Grotesque (affiches),
+   Archivo (courant). Un seul geste mémorable : le billet à souche.
+   Tokens : --papier #F6F1E7 · --carte #FFFDF7 · --encre #211D18
+   --filet #E3D9C4 · --guichet #C93A1C · salle #4E23C4
+   hôtel #1C7A45 · coiffure #C2510C */
+:root {
+  --papier: #F6F1E7;
+  --carte: #FFFDF7;
+  --encre: #211D18;
+  --encre-douce: #6F665A;
+  --filet: #E3D9C4;
+  --guichet: #C93A1C;
+  --guichet-fonce: #9E2A11;
+  --salle: #4E23C4;
+  --salle-fond: #EAE4F9;
+  --hotel: #1C7A45;
+  --hotel-fond: #DFF0E4;
+  --coiffure: #C2510C;
+  --coiffure-fond: #FBE7D2;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--papier);
+  color: var(--encre);
+  font-family: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, .titre {
+  font-family: 'Bricolage Grotesque', 'Archivo', sans-serif;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+p { max-width: 62ch; }
+a { color: inherit; }
+::selection { background: var(--guichet); color: var(--carte); }
+:focus-visible { outline: 3px solid var(--guichet); outline-offset: 2px; border-radius: 4px; }
+
+/* ---------- Navigation : papier, filet d'encre ---------- */
+.nav-guichet {
+  background: var(--papier);
+  border-bottom: 2px solid var(--encre);
+}
+.nav-guichet .marque {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: baseline;
+  gap: .45rem;
+}
+.nav-guichet .marque .point { color: var(--guichet); }
+.nav-guichet .marque small {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 500;
+  font-size: .8rem;
+  color: var(--encre-douce);
+}
+.nav-guichet .lien {
+  font-weight: 600;
+  padding: .35rem .1rem;
+  margin: 0 .7rem;
+  border-bottom: 2px solid transparent;
+  color: var(--encre);
+}
+.nav-guichet .lien:hover { border-bottom-color: var(--guichet); }
+.nav-guichet .lien.actif { border-bottom-color: var(--encre); }
+.btn-encre {
+  background: var(--encre);
+  color: var(--papier);
+  font-weight: 600;
+  border: 2px solid var(--encre);
+  border-radius: 10px;
+  padding: .5rem 1.15rem;
+}
+.btn-encre:hover { background: transparent; color: var(--encre); }
+.btn-guichet {
+  background: var(--guichet);
+  border: 2px solid var(--guichet);
+  color: #fff;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: .5rem 1.15rem;
+}
+.btn-guichet:hover { background: var(--guichet-fonce); border-color: var(--guichet-fonce); color: #fff; }
+
+/* ---------- Affiche (hero) : titre + tableau des départs ---------- */
+.affiche {
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: 3rem;
+  align-items: start;
+  padding: 3.5rem 0 2.5rem;
+}
+.affiche-titre {
+  font-size: clamp(2.9rem, 6.5vw, 5.2rem);
+  font-weight: 800;
+  margin: 0 0 1.2rem;
+}
+.affiche-titre .accent { color: var(--guichet); }
+.affiche-sous {
+  font-size: 1.12rem;
+  color: var(--encre-douce);
+  max-width: 44ch;
+  margin-bottom: 1.8rem;
+}
+.affiche-actions { display: flex; gap: .8rem; flex-wrap: wrap; }
+.btn-grand { padding: .8rem 1.6rem; font-size: 1.02rem; }
+
+/* Tableau des départs : le contenu le plus caractéristique, en premier */
+.departs {
+  background: var(--carte);
+  border: 2px solid var(--encre);
+  border-radius: 16px;
+  box-shadow: 6px 6px 0 var(--encre);
+  overflow: hidden;
+  animation: levee .55s ease both;
+}
+.departs-tete {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: .9rem 1.2rem;
+  border-bottom: 2px solid var(--encre);
+}
+.departs-tete h2 { font-size: 1.35rem; font-weight: 800; margin: 0; }
+.departs-tete time { font-size: .85rem; color: var(--encre-douce); text-transform: capitalize; }
+.depart {
+  display: grid;
+  grid-template-columns: 62px 1fr auto;
+  gap: .9rem;
+  align-items: center;
+  padding: .8rem 1.2rem;
+  border-bottom: 2px dashed #CFC3A6;
+}
+.depart:last-child { border-bottom: 0; }
+.depart:hover { background: #FBF6EA; }
+.depart-heure {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+}
+.depart-titre { font-weight: 600; line-height: 1.3; display: block; }
+.depart-salle { font-size: .85rem; color: var(--encre-douce); display: block; }
+.depart-droit { text-align: right; }
+.depart-places { font-size: .85rem; font-weight: 600; display: block; }
+.depart-places.bientot-complet { color: var(--guichet); }
+.depart-reserver { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.depart-reserver:hover { color: var(--guichet); }
+
+/* Pastilles univers : l'info, pas la déco */
+.puce {
+  display: inline-block;
+  font-size: .78rem;
+  font-weight: 700;
+  border-radius: 6px;
+  padding: .15rem .5rem;
+  margin-bottom: .35rem;
+}
+.puce-CINEMA { background: var(--salle-fond); color: var(--salle); }
+.puce-HOTEL { background: var(--hotel-fond); color: var(--hotel); }
+.puce-COIFFURE { background: var(--coiffure-fond); color: var(--coiffure); }
+
+/* ---------- Sections ---------- */
+.section { padding: 2.2rem 0; }
+.section-titre { font-size: clamp(1.7rem, 3.4vw, 2.4rem); font-weight: 800; margin: 0; }
+.section-chapeau { color: var(--encre-douce); margin: .4rem 0 1.6rem; max-width: 60ch; }
+.tete-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  border-bottom: 2px solid var(--encre);
+  padding-bottom: .7rem;
+  margin-bottom: 1.4rem;
+}
+.lien-texte { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+.lien-texte:hover { color: var(--guichet); }
+
+/* ---------- Billet à souche : l'objet fétiche ---------- */
+.billet {
+  display: flex;
+  align-items: stretch;
+  background: var(--carte);
+  border: 2px solid var(--encre);
+  border-radius: 14px;
+  box-shadow: 5px 5px 0 rgba(33, 29, 24, .14);
+  transition: box-shadow .18s ease, transform .18s ease;
+  height: 100%;
+  position: relative;
+}
+.billet:hover { box-shadow: 7px 7px 0 rgba(33, 29, 24, .22); }
+.billet:hover .souche { background: var(--guichet); border-color: var(--guichet); }
+.billet-principal { flex: 1; padding: 1.1rem 1.2rem; min-width: 0; }
+.billet-nom {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 800;
+  font-size: 1.3rem;
+  line-height: 1.15;
+  margin: .1rem 0 .5rem;
+}
+.billet-ligne { display: flex; align-items: baseline; gap: .5rem; font-size: .92rem; margin-bottom: .15rem; }
+.billet-ligne .etiquette { color: var(--encre-douce); flex-shrink: 0; min-width: 4.2rem; }
+.billet-perf {
+  flex: 0 0 auto;
+  width: 0;
+  border-left: 2px dashed #C4B797;
+  margin: 0;
+  position: relative;
+}
+.billet-perf::before, .billet-perf::after {
+  content: "";
+  position: absolute;
+  left: -11px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--papier);
+  border: 2px solid var(--encre);
+}
+.billet-perf::before { top: -13px; }
+.billet-perf::after { bottom: -13px; }
+.souche {
+  flex: 0 0 132px;
+  background: var(--encre);
+  color: var(--papier);
+  border: 2px solid var(--encre);
+  border-radius: 0 11px 11px 0;
+  margin: -2px -2px -2px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: .35rem;
+  padding: 1rem .7rem;
+  text-align: center;
+  transition: background .18s ease;
+}
+.souche-prix {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 800;
+  font-size: 1.35rem;
+}
+.souche-action {
+  background: var(--papier);
+  color: var(--encre);
+  font-weight: 700;
+  font-size: .9rem;
+  border-radius: 8px;
+  padding: .45rem .9rem;
+  width: 100%;
+}
+.souche-action:hover { background: #fff; color: var(--encre); }
+.jauge { height: 6px; border-radius: 99px; background: #E7DEC8; overflow: hidden; margin-top: .7rem; }
+.jauge > div { height: 100%; background: var(--encre); border-radius: 99px; transition: width .4s ease; }
+
+/* ---------- Programme (services) : lignes de registre ---------- */
+.programme { border-top: 2px solid var(--encre); }
+.programme-ligne {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.3rem .2rem;
+  border-bottom: 2px dashed #CFC3A6;
+}
+.programme-ligne:hover { background: #FBF6EA; }
+.programme-nom { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1.5rem; margin: 0; }
+.programme-desc { color: var(--encre-douce); margin: .2rem 0 .4rem; max-width: 56ch; }
+.programme-meta { font-size: .9rem; font-weight: 600; }
+.programme-droit { text-align: right; }
+
+/* ---------- Filtres : cases à cocher textuelles ---------- */
+.filtres { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+.filtre {
+  border: 2px solid var(--encre);
+  background: transparent;
+  border-radius: 999px;
+  padding: .35rem 1rem;
+  font-weight: 600;
+  font-size: .9rem;
+}
+.filtre:hover { background: #EFE7D3; }
+.filtre.actif { background: var(--encre); color: var(--papier); }
+.barre-filtres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .8rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.4rem;
+}
+.champ {
+  border: 2px solid var(--encre);
+  border-radius: 10px;
+  background: var(--carte);
+  padding: .55rem .8rem;
+  font: inherit;
+  color: var(--encre);
+}
+.champ:focus { border-color: var(--guichet); outline: 3px solid rgba(201, 58, 28, .25); }
+
+/* ---------- Formulaires ---------- */
+.formulaire {
+  background: var(--carte);
+  border: 2px solid var(--encre);
+  border-radius: 16px;
+  box-shadow: 6px 6px 0 rgba(33, 29, 24, .14);
+  padding: 1.8rem;
+}
+.formulaire label { font-weight: 600; display: block; margin-bottom: .3rem; }
+.formulaire .champ { width: 100%; }
+.recap {
+  border: 2px solid var(--encre);
+  border-radius: 16px;
+  background: var(--carte);
+  padding: 1.4rem 1.5rem;
+  box-shadow: 6px 6px 0 rgba(33, 29, 24, .14);
+}
+
+/* ---------- Registre (réservations) ---------- */
+.registre {
+  background: var(--carte);
+  border: 2px solid var(--encre);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 6px 6px 0 rgba(33, 29, 24, .14);
+}
+.registre table { margin: 0; }
+.registre thead th {
+  background: var(--encre);
+  color: var(--papier);
+  font-weight: 600;
+  border: 0;
+  font-size: .9rem;
+}
+.registre tbody tr { border-bottom: 1px solid var(--filet); }
+.registre tbody tr:last-child { border-bottom: 0; }
+.code {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 800;
+  letter-spacing: .06em;
+  background: #F1EAD6;
+  padding: .2rem .55rem;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.tampon {
+  display: inline-block;
+  font-weight: 700;
+  font-size: .82rem;
+  border-radius: 6px;
+  padding: .2rem .6rem;
+  white-space: nowrap;
+}
+.tampon-confirmee { background: var(--encre); color: var(--papier); }
+.tampon-annulee {
+  background: transparent;
+  color: var(--guichet);
+  border: 2px solid var(--guichet);
+  transform: rotate(-3deg);
+}
+
+/* ---------- États vides : invitation à agir ---------- */
+.vide {
+  border: 2px dashed #B9AC8D;
+  border-radius: 16px;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+.vide h3 { font-size: 1.5rem; font-weight: 800; }
+.vide p { color: var(--encre-douce); }
+
+/* ---------- Univers : trois lignes franches ---------- */
+.univers { border-top: 2px solid var(--encre); }
+.univers-ligne {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.2rem .2rem;
+  border-bottom: 2px solid var(--encre);
+}
+.univers-nom { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1.6rem; margin: 0; }
+.univers-nom .pastille { display: inline-block; width: .7em; height: .7em; border-radius: 50%; margin-right: .5rem; }
+.univers-desc { color: var(--encre-douce); margin: 0; max-width: 58ch; }
+
+.pied { border-top: 2px solid var(--encre); margin-top: 3rem; padding: 1.4rem 0 2rem; color: var(--encre-douce); font-size: .9rem; }
+.pied a { font-weight: 600; color: var(--encre); text-decoration: underline; text-underline-offset: 3px; }
+
+.alert { border-radius: 12px; border-width: 2px; }
+
+/* ---------- Unique moment animé au chargement ---------- */
+@keyframes levee { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 992px) {
+  .affiche { grid-template-columns: 1fr; gap: 2rem; padding-top: 2.2rem; }
+}
+@media (max-width: 576px) {
+  .billet { flex-direction: column; }
+  .billet-perf { width: auto; height: 0; border-left: 0; border-top: 2px dashed #C4B797; margin: 0 14px; }
+  .billet-perf::before { left: -25px; top: -11px; }
+  .billet-perf::after { left: auto; right: -25px; top: -11px; }
+  .souche { border-radius: 0 0 11px 11px; margin: 0 -2px -2px; flex-basis: auto; flex-direction: row; justify-content: space-between; padding: .8rem 1.1rem; }
+  .souche-action { width: auto; }
+  .depart { grid-template-columns: 54px 1fr; }
+  .depart-droit { grid-column: 2; text-align: left; display: flex; gap: 1rem; align-items: baseline; }
+  .programme-ligne, .univers-ligne { grid-template-columns: 1fr; }
+  .programme-droit { text-align: left; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

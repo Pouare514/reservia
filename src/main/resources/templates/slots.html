@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Billets — Réservia, la billetterie</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg nav-guichet sticky-top">
+    <div class="container">
+        <a class="marque" th:href="@{/}">Réservia<span class="point">.</span><small>la billetterie</small></a>
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="nav">
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+                <li class="nav-item"><a class="lien" th:href="@{/}">Accueil</a></li>
+                <li class="nav-item"><a class="lien" th:href="@{/services}">Programme</a></li>
+                <li class="nav-item"><a class="lien actif" th:href="@{/creneaux}">Billets</a></li>
+                <li class="nav-item"><a class="lien" th:href="@{/reservations}">Mes places</a></li>
+                <li class="nav-item ms-lg-2"><a class="btn-encre btn-sm" th:href="@{/admin/creneaux/nouveau}">Ouvrir un créneau</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="container section">
+    <div th:if="${succes}" class="alert alert-success alert-dismissible fade show"><span th:text="${succes}"></span><button class="btn-close" data-bs-dismiss="alert"></button></div>
+    <div th:if="${erreur}" class="alert alert-danger alert-dismissible fade show"><span th:text="${erreur}"></span><button class="btn-close" data-bs-dismiss="alert"></button></div>
+
+    <div class="tete-section">
+        <div>
+            <h1 class="section-titre">Billets disponibles</h1>
+            <p class="section-chapeau" th:if="${slots}" th:text="${slots.size()} + (${slots.size() > 1} ? ' créneaux à prendre.' : ' créneau à prendre.')">créneaux</p>
+        </div>
+    </div>
+
+    <form class="barre-filtres" method="get" th:action="@{/creneaux}">
+        <div class="filtres">
+            <a th:href="@{/creneaux(date=${date})}" class="filtre" th:classappend="${categorie == null} ? ' actif'">Tout</a>
+            <a th:href="@{/creneaux(categorie='CINEMA', date=${date})}" class="filtre" th:classappend="${categorie?.name() == 'CINEMA'} ? ' actif'">Cinéma</a>
+            <a th:href="@{/creneaux(categorie='HOTEL', date=${date})}" class="filtre" th:classappend="${categorie?.name() == 'HOTEL'} ? ' actif'">Hôtel</a>
+            <a th:href="@{/creneaux(categorie='COIFFURE', date=${date})}" class="filtre" th:classappend="${categorie?.name() == 'COIFFURE'} ? ' actif'">Coiffure</a>
+        </div>
+        <div class="d-flex gap-2">
+            <input type="date" name="date" class="champ" th:value="${date}" aria-label="Filtrer par jour"/>
+            <input type="hidden" name="categorie" th:value="${categorie}"/>
+            <button class="btn-encre">Filtrer</button>
+        </div>
+    </form>
+
+    <div th:if="${#lists.isEmpty(slots)}" class="vide">
+        <h3>Plus de billets pour ce jour-là</h3>
+        <p>Changez de date ou d'univers, le guichet se remplit vite.</p>
+        <a th:href="@{/creneaux}" class="btn-encre">Tout afficher</a>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-6 col-xl-4" th:each="s : ${slots}">
+            <article class="billet">
+                <div class="billet-principal">
+                    <span class="puce" th:classappend="' puce-' + ${s.service.categorie}" th:text="${s.service.categorie.label}">Cinéma</span>
+                    <h2 class="billet-nom" th:text="${s.service.nom}">Dune</h2>
+                    <p class="billet-ligne"><span class="etiquette">Lieu</span><span th:text="${s.resource.nom}">Salle 1</span></p>
+                    <p class="billet-ligne"><span class="etiquette">Séance</span>
+                        <span class="text-capitalize" th:text="${#temporals.format(s.debut, 'EEE d MMM, HH:mm')} + ' – ' + ${#temporals.format(s.fin, 'HH:mm')}">mer.</span>
+                        <span th:text="'(' + ${s.service.dureeFormatee} + ')'">(2h46)</span></p>
+                    <p class="billet-ligne"><span class="etiquette">Reste</span>
+                        <b th:text="${s.placesDisponibles} + (${s.placesDisponibles > 1} ? ' places' : ' place')">80 places</b></p>
+                    <div class="jauge"><div th:style="'width:' + ${(s.placesTotales - s.placesDisponibles) * 100 / s.placesTotales} + '%'"></div></div>
+                </div>
+                <div class="billet-perf" aria-hidden="true"></div>
+                <div class="souche">
+                    <span class="souche-prix" th:text="${#numbers.formatDecimal(s.service.prix, 1, 2) + ' €'}">9,50 €</span>
+                    <a class="souche-action" th:href="@{'/reserver/' + ${s.id}}">Réserver</a>
+                    <form th:action="@{'/admin/creneaux/' + ${s.id} + '/annuler'}" method="post" onsubmit="return confirm('Retirer ce créneau du guichet ?')" style="width:100%">
+                        <button class="souche-action" style="background:transparent;border:1px solid var(--papier);color:var(--papier);font-size:.78rem;padding:.25rem" title="Retirer ce créneau">Retirer</button>
+                    </form>
+                </div>
+            </article>
+        </div>
+    </div>
+</main>
+<footer class="container pied"><b>Réservia</b>, la billetterie. <a href="/api/slots/available">Données en JSON</a></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
