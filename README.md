@@ -20,19 +20,17 @@ API REST JSON incluse (`/api`) pour brancher un SPA plus tard.
 
 ## 2. Prérequis & lancement
 
-- **Java 17+** (testé avec JDK 25, bytecode `release 17`) et **Maven 3.9+**.
-- Un Maven portable est fourni dans `.tools/` si Maven n'est pas installé.
+- **Java 17+** (testé avec JDK 25, bytecode `release 21`) et **aucun Maven à installer** : le wrapper `mvnw` télécharge Maven tout seul au premier lancement.
 - Aucune base à installer : **H2 en mémoire**, schéma généré (`ddl-auto=update`), données démo chargées au démarrage.
 
 ```powershell
 cd C:\codes\java\reservation
 
-# Lancer l'app (choisir UNE des deux lignes) :
-mvn spring-boot:run
-.\.tools\apache-maven-3.9.11\bin\mvn.cmd spring-boot:run
+# Lancer l'app (le wrapper télécharge Maven 3.9 tout seul si besoin) :
+.\mvnw.cmd spring-boot:run
 
 # Lancer les tests :
-mvn test
+.\mvnw.cmd verify
 # Résultat attendu : Tests run: 37, Failures: 0, Errors: 0, Skipped: 0 (+ gate JaCoCo 85 % lignes)
 ```
 
@@ -170,7 +168,7 @@ Cinéma : 2 séances/jour/salle (14h30, 20h30) + concert 19h. Hôtel : nuitées 
 
 ## 8. Tests (37, tous verts) + JaCoCo 87 % lignes
 
-`mvn verify` (le Maven portable de `.tools/` remplace `mvnw`, absent ici) : compilation Java 21,
+`./mvnw verify` : compilation Java 21,
 tests, rapport JaCoCo (`target/site/jacoco/index.html`), **gate 85 % lignes** (échec du build en deçà).
 
 `@SpringBootTest` sur H2 (rollback par test) + slices `@WebMvcTest` (Thymeleaf réel, services mockés —
@@ -230,7 +228,7 @@ Scénario manuel à rejouer dans le navigateur : filtrer `/creneaux?categorie=CO
 | H2 en mémoire + Flyway (`V1__schema.sql`, `ddl-auto=validate`) | Schéma versionné et vérifié au boot, démo sans Docker ; console `/h2-console` intégrée |
 | Builders Java explicites (**sans Lombok**) | Lombok incompatible avec le JDK 25 installé → code sans annotation processing, plus robuste |
 | JUnit 5 + AssertJ + MockMvc (`spring-boot-starter-test`) | 37 tests (intégration H2 + slices web), gate JaCoCo 85 % lignes |
-| Maven (+ portable dans `.tools/`) | Build reproductible même sans Maven installé |
+| Maven Wrapper (`mvnw`) | Build reproductible sans rien installer : Maven 3.9 téléchargé tout seul |
 | Monolithe + API REST | Évite la complexité React/Vue pour ce TP ; l'API `/api` permet un SPA ultérieur sans toucher au métier |
 | `PESSIMISTIC_WRITE` + `@Version` | Double garde-fou concurrence : verrou à la réservation, version optimiste en général |
 | Exceptions scellées + `ApiExceptionHandler` | `ReservationException` (permits Introuvable/Conflit/Invalides) → 404/409/400 via switch exhaustif ; le web garde ses bandeaux |
