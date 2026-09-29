@@ -24,7 +24,8 @@ API REST JSON incluse (`/api`) pour brancher un SPA plus tard.
 - Aucune base à installer : **H2 en mémoire**, schéma généré (`ddl-auto=update`), données démo chargées au démarrage.
 
 ```powershell
-cd C:\codes\java\reservation
+git clone https://github.com/Pouare514/reservia.git
+cd reservia
 
 # Lancer l'app (le wrapper télécharge Maven 3.9 tout seul si besoin) :
 .\mvnw.cmd spring-boot:run
